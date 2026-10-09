@@ -19,6 +19,10 @@ export default defineConfig({
       "/api": "http://127.0.0.1:3000",
     },
   },
+  test: {
+    include: ["src/**/*.test.ts", "src/**/*.test.tsx"],
+    environment: "happy-dom",
+  },
   staged: {
     "*": "vp check --fix",
   },

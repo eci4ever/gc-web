@@ -5,6 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vp dev",
+    "dev:api": "cargo run --manifest-path ../gc-api/Cargo.toml",
+    "dev:db": "docker start gcapi-dev-pg 2>/dev/null || docker run -d --name gcapi-dev-pg -p 55432:5432 -e POSTGRES_PASSWORD=dev -e POSTGRES_DB=gcapi postgres:18-alpine",
+    "dev:stack": "concurrently -k -n db,api,web -c yellow,blue,green \"npm run dev:db\" \"npm run dev:api\" \"vp dev\"",
+    "dev:down": "docker stop gcapi-dev-pg",
     "build": "tsc && vp build",
     "preview": "vp preview",
     "prepare": "vp config"
@@ -24,10 +28,13 @@
   "devDependencies": {
     "@tailwindcss/vite": "^4.3.3",
     "@tanstack/router-plugin": "^1.168.42",
+    "@testing-library/react": "^16.3.3",
     "@types/node": "^26.6.4",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.1.2",
+    "concurrently": "^10.0.6",
+    "happy-dom": "^20.14.6",
     "shadcn": "^4.21.4",
     "tailwindcss": "^4.3.3",
     "typescript": "~6.0.2",

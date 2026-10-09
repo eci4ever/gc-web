@@ -30,15 +30,13 @@ jobs:
           ref: ${{ inputs.ref || github.sha }}
       - id: commit
         run: echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
-      - uses: actions/setup-node@v6
+      - uses: voidzero-dev/setup-vp@v1.21.1
         with:
           node-version: 24
-          package-manager-cache: false
-      - name: Install npm 12.2.0
-        run: npm install --global --prefix "$RUNNER_TEMP/npm122" npm@12.2.0
-      - run: echo "$RUNNER_TEMP/npm122/bin" >> "$GITHUB_PATH"
-      - run: npm --version
-      - run: npm ci
+          cache: true
+      - run: vp install --frozen-lockfile
+      - run: vp check
+      - run: vp test
       - run: npm run build
       - name: Package web build
         run: tar -C dist -czf gc-web.tar.gz .

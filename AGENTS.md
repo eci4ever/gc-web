@@ -25,3 +25,10 @@ release. Add a tool name to select part of the graph. For example, run
 - [ ] If setup, runtime, or package-manager behavior looks wrong, run `vp env doctor` and include its output when asking for help.
 
 <!--VITE PLUS END-->
+
+# gc-web specifics
+
+- Stack: React 19, TanStack Router (file-based; `src/routeTree.gen.ts` is generated but **committed** because CI typechecks before building — regenerate via `vp dev`/`vp build`/`vp test`, never edit by hand), TanStack Query, Tailwind CSS v4, shadcn/ui on Base UI primitives.
+- Dev stack in one command: `vp run dev:stack` — starts the dev Postgres container, `gc-api` (expects the sibling checkout `../gc-api`), and `vp dev`. Stop the database afterwards with `vp run dev:down`.
+- Tests: `vp test` (Vitest bundled in `vite-plus/test`, config in the `test` block of `vite.config.ts`).
+- npm is pinned to 12.2.0 through `devEngines`. A shell's raw `npm`/`npx` may be an older version and fails with `EBADDEVENGINES` — use `vp dlx <pkg>`, `vp exec <bin>`, or `vp run` instead.
