@@ -39,7 +39,7 @@ sudo ln -sfn "$release_dir" "$web_root/current.new"
 sudo mv -Tf "$web_root/current.new" "$web_root/current"
 rm -f "$web_archive"
 
-test -s "$web_root/current/index.html"
+sudo test -s "$web_root/current/index.html"
 
 curl --fail --silent --show-error --retry 12 --retry-all-errors --retry-delay 5 \
   --resolve vms.nimfi.dev:443:127.0.0.1 https://vms.nimfi.dev/ >/dev/null
