@@ -33,9 +33,11 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: 24
-      - name: Use npm 12.2.0
-        working-directory: ${{ runner.temp }}
-        run: npm install --global npm@12.2.0
+          package-manager-cache: false
+      - name: Install npm 12.2.0
+        run: npm install --global --prefix "$RUNNER_TEMP/npm122" npm@12.2.0
+      - run: echo "$RUNNER_TEMP/npm122/bin" >> "$GITHUB_PATH"
+      - run: npm --version
       - run: npm ci
       - run: npm run build
       - name: Package web build
