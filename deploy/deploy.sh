@@ -23,7 +23,13 @@ git cat-file -e "${commit_sha}^{commit}"
 git checkout --quiet --force --detach "$commit_sha"
 
 sudo install -d -o root -g caddy -m 0750 "$web_root" "$web_root/releases"
-sudo rm -rf "$release_dir"
+
+# Deploy pertama: 'current' masih direktori biasa (placeholder), bukan symlink.
+if [ -d "$web_root/current" ] && [ ! -L "$web_root/current" ]; then
+  sudo rm -rf "$web_root/current"
+fi
+
+sudo rm -rf "$release_dir" "$web_root/current.new"
 sudo install -d -o root -g caddy -m 0750 "$release_dir"
 sudo tar -xzf "$web_archive" -C "$release_dir"
 sudo chown -R root:caddy "$release_dir"
