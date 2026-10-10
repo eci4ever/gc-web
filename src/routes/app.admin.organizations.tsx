@@ -103,6 +103,8 @@ function AdminOrganizationsPage() {
                 id="cari-organisasi"
                 name="q"
                 type="search"
+                autoComplete="off"
+                spellCheck={false}
                 placeholder="Cari nama / slug / owner…"
                 value={search}
                 onChange={(event) => setSearch(event.target.value)}

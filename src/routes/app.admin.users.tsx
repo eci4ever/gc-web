@@ -155,6 +155,8 @@ function AdminUsersPage() {
                 id="cari-pengguna"
                 name="q"
                 type="search"
+                autoComplete="off"
+                spellCheck={false}
                 placeholder="Cari email atau nama…"
                 value={search}
                 onChange={(event) => setSearch(event.target.value)}

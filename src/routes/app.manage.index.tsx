@@ -134,6 +134,7 @@ function MembersPage() {
                 type="email"
                 placeholder="email@contoh.com"
                 autoComplete="email"
+                spellCheck={false}
                 required
                 className="sm:max-w-xs"
               />

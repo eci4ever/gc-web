@@ -59,6 +59,8 @@ function AdminAuditPage() {
                 id="tapis-audit"
                 name="q"
                 type="search"
+                autoComplete="off"
+                spellCheck={false}
                 placeholder="Tapis…"
                 value={filter}
                 onChange={(event) => setFilter(event.target.value)}

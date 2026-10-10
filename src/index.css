@@ -5,6 +5,21 @@
 
 @custom-variant dark (&:is(.dark *));
 
+:root {
+  color-scheme: light;
+}
+
+.dark {
+  color-scheme: dark;
+}
+
+/* Tap responsif pada skrin sentuh tanpa menjejaskan zoom double-tap */
+a,
+button,
+select {
+  touch-action: manipulation;
+}
+
 @theme inline {
   --font-heading: var(--font-sans);
   --font-sans: "Inter Variable", sans-serif;

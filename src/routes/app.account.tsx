@@ -218,7 +218,13 @@ function AccountPage() {
                 <FieldGroup>
                   <Field>
                     <FieldLabel htmlFor="new_email">Email baharu</FieldLabel>
-                    <Input id="new_email" name="new_email" type="email" required />
+                    <Input
+                      id="new_email"
+                      name="new_email"
+                      type="email"
+                      spellCheck={false}
+                      required
+                    />
                   </Field>
                   <Field>
                     <FieldLabel htmlFor="email-password">Kata laluan semasa</FieldLabel>

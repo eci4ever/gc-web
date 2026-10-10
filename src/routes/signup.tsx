@@ -79,7 +79,14 @@ function SignupPage() {
           </Field>
           <Field>
             <FieldLabel htmlFor="email">Email</FieldLabel>
-            <Input id="email" name="email" type="email" autoComplete="email" required />
+            <Input
+              id="email"
+              name="email"
+              type="email"
+              autoComplete="email"
+              spellCheck={false}
+              required
+            />
           </Field>
           <Field>
             <FieldLabel htmlFor="password">Kata laluan</FieldLabel>
