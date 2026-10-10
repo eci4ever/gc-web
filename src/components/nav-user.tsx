@@ -71,7 +71,7 @@ export function NavUser({ me }: { me: Me }) {
           <span className="block truncate text-xs text-muted-foreground">{me.user.email}</span>
         </span>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="start" side="top" className="w-64">
+      <DropdownMenuContent align="start" side="right" className="w-64">
         <DropdownMenuGroup>
           <DropdownMenuLabel className="font-normal">
             <p className="truncate text-sm font-medium">{me.user.name}</p>

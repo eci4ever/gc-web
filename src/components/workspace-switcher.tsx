@@ -89,7 +89,7 @@ export function WorkspaceSwitcher() {
           </Badge>
           <ChevronsUpDownIcon className="ml-1 size-3 shrink-0 opacity-50" />
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="start" className="w-64">
+        <DropdownMenuContent align="start" side="right" className="w-64">
           <DropdownMenuGroup>
             <DropdownMenuLabel>Workspace</DropdownMenuLabel>
             {orgs.data?.map((org) => (
