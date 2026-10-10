@@ -4,6 +4,7 @@ import { useEffect, useState, type FormEvent } from "react";
 import { toast } from "sonner";
 
 import { PageBody, PageHeader } from "@/components/page-header";
+import { TablePagination } from "@/components/table-pagination";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -38,33 +39,48 @@ interface AdminOrgInfo {
   created_at: string;
 }
 
-type OrgsSearch = { q?: string };
+type OrgsSearch = { q?: string; page: number };
+
+function parsePage(value: unknown): number {
+  const page = Number(value);
+  return Number.isFinite(page) && page >= 1 ? Math.floor(page) : 1;
+}
 
 export const Route = createFileRoute("/app/admin/organizations")({
   validateSearch: (search: Record<string, unknown>): OrgsSearch => ({
     q: typeof search.q === "string" ? search.q : undefined,
+    page: search.page === undefined ? 1 : parsePage(search.page),
   }),
   component: AdminOrganizationsPage,
 });
 
+interface Paginated<T> {
+  data: T[];
+  total: number;
+  page: number;
+  per_page: number;
+}
+
 function AdminOrganizationsPage() {
-  const { q } = Route.useSearch();
+  const { q, page } = Route.useSearch();
   const navigate = Route.useNavigate();
   const [search, setSearch] = useState(q ?? "");
   const [renameTarget, setRenameTarget] = useState<AdminOrgInfo | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<AdminOrgInfo | null>(null);
   const queryClient = useQueryClient();
 
-  // Debounce kekataan ke URL (?q=) supaya carian boleh di-deep-link.
+  // Debounce kekataan ke URL (?q=) supaya carian boleh di-deep-link;
+  // carian baharu sentiasa kembali ke halaman pertama.
   useEffect(() => {
+    if (search === (q ?? "")) return; // tiada perubahan — jangan ganggu halaman
     const timer = setTimeout(() => {
       void navigate({
-        search: (prev) => ({ ...prev, q: search || undefined }),
+        search: (prev) => ({ ...prev, q: search || undefined, page: 1 }),
         replace: true,
       });
     }, 300);
     return () => clearTimeout(timer);
-  }, [search, navigate]);
+  }, [search, q, navigate]);
 
   // Segerak balik/ke hadapan pelayar.
   useEffect(() => {
@@ -72,10 +88,20 @@ function AdminOrganizationsPage() {
   }, [q]);
 
   const orgs = useQuery({
-    queryKey: ["admin", "organizations", q ?? ""],
+    queryKey: ["admin", "organizations", q ?? "", page],
     queryFn: () =>
-      http.get<AdminOrgInfo[]>(`/api/admin/organizations?q=${encodeURIComponent(q ?? "")}`),
+      http.get<Paginated<AdminOrgInfo>>(
+        `/api/admin/organizations?q=${encodeURIComponent(q ?? "")}&page=${page}`,
+      ),
   });
+
+  const totalPages = Math.max(1, Math.ceil((orgs.data?.total ?? 0) / (orgs.data?.per_page ?? 50)));
+
+  const setPage = (next: number) => {
+    void navigate({
+      search: (prev) => ({ ...prev, page: next > 1 ? next : 1 }),
+    });
+  };
 
   const invalidate = () => queryClient.invalidateQueries({ queryKey: ["admin", "organizations"] });
 
@@ -134,7 +160,7 @@ function AdminOrganizationsPage() {
                 className="max-w-sm"
               />
             </div>
-            {orgs.data?.map((org) => (
+            {orgs.data?.data.map((org) => (
               <div
                 key={org.id}
                 className="flex flex-wrap items-center gap-3 rounded-lg border px-3 py-2"
@@ -162,11 +188,13 @@ function AdminOrganizationsPage() {
                 </DropdownMenu>
               </div>
             ))}
-            {orgs.data?.length === 0 ? (
+            {orgs.data?.data.length === 0 ? (
               <p className="text-sm text-muted-foreground">Tiada organisasi sepadan.</p>
             ) : null}
           </CardContent>
         </Card>
+
+        <TablePagination page={page} totalPages={totalPages} onPageChange={setPage} />
       </PageBody>
 
       <AlertDialog open={!!renameTarget} onOpenChange={(open) => !open && setRenameTarget(null)}>

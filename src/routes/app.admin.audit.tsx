@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 
 import { PageBody, PageHeader } from "@/components/page-header";
+import { TablePagination } from "@/components/table-pagination";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -17,34 +18,53 @@ interface AuditEntry {
   detail: string | null;
 }
 
-type AuditSearch = { q?: string };
+type AuditSearch = { q?: string; page: number };
+
+function parsePage(value: unknown): number {
+  const page = Number(value);
+  return Number.isFinite(page) && page >= 1 ? Math.floor(page) : 1;
+}
 
 export const Route = createFileRoute("/app/admin/audit")({
   validateSearch: (search: Record<string, unknown>): AuditSearch => ({
     q: typeof search.q === "string" ? search.q : undefined,
+    page: search.page === undefined ? 1 : parsePage(search.page),
   }),
   component: AdminAuditPage,
 });
 
+interface Paginated<T> {
+  data: T[];
+  total: number;
+  page: number;
+  per_page: number;
+}
+
 function AdminAuditPage() {
-  const { q } = Route.useSearch();
+  const { q, page } = Route.useSearch();
   const navigate = Route.useNavigate();
   const filter = q ?? "";
 
   const setFilter = (value: string) => {
     void navigate({
-      search: (prev: AuditSearch) => ({ ...prev, q: value || undefined }),
+      search: (prev) => ({ ...prev, q: value || undefined, page: 1 }),
       replace: true,
     });
   };
 
+  const setPage = (next: number) => {
+    void navigate({
+      search: (prev) => ({ ...prev, page: next > 1 ? next : 1 }),
+    });
+  };
+
   const audit = useQuery({
-    queryKey: ["admin", "audit"],
-    queryFn: () => http.get<AuditEntry[]>("/api/admin/audit"),
+    queryKey: ["admin", "audit", page],
+    queryFn: () => http.get<Paginated<AuditEntry>>(`/api/admin/audit?page=${page}`),
     refetchInterval: 15_000,
   });
 
-  const entries = (audit.data ?? []).filter((entry) => {
+  const entries = (audit.data?.data ?? []).filter((entry) => {
     if (!filter) return true;
     const haystack = [entry.actor_email, entry.target_email, entry.action, entry.detail ?? ""]
       .join(" ")
@@ -52,13 +72,18 @@ function AdminAuditPage() {
     return haystack.includes(filter.toLowerCase());
   });
 
+  const totalPages = Math.max(
+    1,
+    Math.ceil((audit.data?.total ?? 0) / (audit.data?.per_page ?? 50)),
+  );
+
   return (
     <>
       <PageHeader title="Audit" />
       <PageBody>
         <Card>
           <CardHeader>
-            <CardTitle>50 tindakan terkini</CardTitle>
+            <CardTitle>Tindakan terkini</CardTitle>
             <CardDescription>
               Tapisan klien atas aktor, sasaran, tindakan, dan sebab.
             </CardDescription>
@@ -100,6 +125,8 @@ function AdminAuditPage() {
             ) : null}
           </CardContent>
         </Card>
+
+        <TablePagination page={page} totalPages={totalPages} onPageChange={setPage} />
       </PageBody>
     </>
   );

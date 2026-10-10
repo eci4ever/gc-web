@@ -5,6 +5,7 @@ import { BanIcon, MoreHorizontalIcon, ShieldCheckIcon, UserRoundPlusIcon } from 
 import { toast } from "sonner";
 
 import { PageBody, PageHeader } from "@/components/page-header";
+import { TablePagination } from "@/components/table-pagination";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -47,17 +48,30 @@ interface AdminUserInfo {
   created_at: string;
 }
 
-type UsersSearch = { q?: string };
+type UsersSearch = { q?: string; page: number };
+
+function parsePage(value: unknown): number {
+  const page = Number(value);
+  return Number.isFinite(page) && page >= 1 ? Math.floor(page) : 1;
+}
 
 export const Route = createFileRoute("/app/admin/users")({
   validateSearch: (search: Record<string, unknown>): UsersSearch => ({
     q: typeof search.q === "string" ? search.q : undefined,
+    page: search.page === undefined ? 1 : parsePage(search.page),
   }),
   component: AdminUsersPage,
 });
 
+interface Paginated<T> {
+  data: T[];
+  total: number;
+  page: number;
+  per_page: number;
+}
+
 function AdminUsersPage() {
-  const { q } = Route.useSearch();
+  const { q, page } = Route.useSearch();
   const [search, setSearch] = useState(q ?? "");
   const [banTarget, setBanTarget] = useState<AdminUserInfo | null>(null);
   const [banReason, setBanReason] = useState("");
@@ -66,16 +80,18 @@ function AdminUsersPage() {
   const routerNavigate = Route.useNavigate();
   const navigate = useNavigate();
 
-  // Debounce kekataan ke URL (?q=) supaya carian boleh di-deep-link.
+  // Debounce kekataan ke URL (?q=) supaya carian boleh di-deep-link;
+  // carian baharu sentiasa kembali ke halaman pertama.
   useEffect(() => {
+    if (search === (q ?? "")) return; // tiada perubahan — jangan ganggu halaman
     const timer = setTimeout(() => {
       void routerNavigate({
-        search: (prev) => ({ ...prev, q: search || undefined }),
+        search: (prev) => ({ ...prev, q: search || undefined, page: 1 }),
         replace: true,
       });
     }, 300);
     return () => clearTimeout(timer);
-  }, [search, routerNavigate]);
+  }, [search, q, routerNavigate]);
 
   // Segerak balik/ke hadapan pelayar.
   useEffect(() => {
@@ -83,9 +99,23 @@ function AdminUsersPage() {
   }, [q]);
 
   const users = useQuery({
-    queryKey: ["admin", "users", q ?? ""],
-    queryFn: () => http.get<AdminUserInfo[]>(`/api/admin/users?q=${encodeURIComponent(q ?? "")}`),
+    queryKey: ["admin", "users", q ?? "", page],
+    queryFn: () =>
+      http.get<Paginated<AdminUserInfo>>(
+        `/api/admin/users?q=${encodeURIComponent(q ?? "")}&page=${page}`,
+      ),
   });
+
+  const totalPages = Math.max(
+    1,
+    Math.ceil((users.data?.total ?? 0) / (users.data?.per_page ?? 50)),
+  );
+
+  const setPage = (next: number) => {
+    void routerNavigate({
+      search: (prev) => ({ ...prev, page: next > 1 ? next : 1 }),
+    });
+  };
 
   const invalidate = () => queryClient.invalidateQueries({ queryKey: ["admin", "users"] });
 
@@ -165,9 +195,7 @@ function AdminUsersPage() {
         <Card>
           <CardHeader>
             <CardTitle>Senarai pengguna</CardTitle>
-            <CardDescription>
-              Carian mengikut email atau nama; maksimum 50 keputusan.
-            </CardDescription>
+            <CardDescription>Carian mengikut email atau nama, 50 sehalaman.</CardDescription>
           </CardHeader>
           <CardContent className="grid gap-3">
             <div className="grid gap-1.5">
@@ -186,7 +214,7 @@ function AdminUsersPage() {
                 className="max-w-sm"
               />
             </div>
-            {users.data?.map((user) => (
+            {users.data?.data.map((user) => (
               <div
                 key={user.id}
                 className="flex flex-wrap items-center gap-3 rounded-lg border px-3 py-2"
@@ -256,11 +284,13 @@ function AdminUsersPage() {
                 </DropdownMenu>
               </div>
             ))}
-            {users.data?.length === 0 ? (
+            {users.data?.data.length === 0 ? (
               <p className="text-sm text-muted-foreground">Tiada pengguna sepadan.</p>
             ) : null}
           </CardContent>
         </Card>
+
+        <TablePagination page={page} totalPages={totalPages} onPageChange={setPage} />
       </PageBody>
 
       <AlertDialog

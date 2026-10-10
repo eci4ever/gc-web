@@ -13,7 +13,7 @@ export function ImpersonationBanner({ active }: { active: boolean }) {
     mutationFn: () => http.post("/api/auth/stop-impersonating"),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["me"] });
-      await navigate({ to: "/app/admin/users" });
+      await navigate({ to: "/app/admin/users", search: { page: 1 } });
     },
   });
 

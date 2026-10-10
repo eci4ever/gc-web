@@ -45,7 +45,7 @@ export function NavUser({ me }: { me: Me }) {
     mutationFn: () => http.post("/api/auth/stop-impersonating"),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["me"] });
-      await navigate({ to: "/app/admin/users" });
+      await navigate({ to: "/app/admin/users", search: { page: 1 } });
     },
     onError: (error) => toast.error(error.message),
   });
