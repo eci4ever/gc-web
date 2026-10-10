@@ -10,33 +10,271 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppRouteImport } from './routes/app'
+import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as SignupRouteImport } from './routes/signup'
+import { Route as TermsRouteImport } from './routes/terms'
+import { Route as VerifyEmailRouteImport } from './routes/verify-email'
+import { Route as AcceptInvitationInvitationIdRouteImport } from './routes/accept-invitation.$invitationId'
+import { Route as AppIndexRouteImport } from './routes/app.index'
+import { Route as AppAccountRouteImport } from './routes/app.account'
+import { Route as AppAdminRouteImport } from './routes/app.admin'
+import { Route as AppManageRouteImport } from './routes/app.manage'
+import { Route as AppSettingsRouteImport } from './routes/app.settings'
+import { Route as AppAdminAuditRouteImport } from './routes/app.admin.audit'
+import { Route as AppAdminOrganizationsRouteImport } from './routes/app.admin.organizations'
+import { Route as AppAdminUsersRouteImport } from './routes/app.admin.users'
+import { Route as AppManageIndexRouteImport } from './routes/app.manage.index'
+import { Route as AppManageInvitationsRouteImport } from './routes/app.manage.invitations'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppRoute = AppRouteImport.update({
+  id: '/app',
+  path: '/app',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SignupRoute = SignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VerifyEmailRoute = VerifyEmailRouteImport.update({
+  id: '/verify-email',
+  path: '/verify-email',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AcceptInvitationInvitationIdRoute =
+  AcceptInvitationInvitationIdRouteImport.update({
+    id: '/accept-invitation/$invitationId',
+    path: '/accept-invitation/$invitationId',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const AppIndexRoute = AppIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAccountRoute = AppAccountRouteImport.update({
+  id: '/account',
+  path: '/account',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAdminRoute = AppAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppManageRoute = AppManageRouteImport.update({
+  id: '/manage',
+  path: '/manage',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSettingsRoute = AppSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAdminAuditRoute = AppAdminAuditRouteImport.update({
+  id: '/audit',
+  path: '/audit',
+  getParentRoute: () => AppAdminRoute,
+} as any)
+const AppAdminOrganizationsRoute = AppAdminOrganizationsRouteImport.update({
+  id: '/organizations',
+  path: '/organizations',
+  getParentRoute: () => AppAdminRoute,
+} as any)
+const AppAdminUsersRoute = AppAdminUsersRouteImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => AppAdminRoute,
+} as any)
+const AppManageIndexRoute = AppManageIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppManageRoute,
+} as any)
+const AppManageInvitationsRoute = AppManageInvitationsRouteImport.update({
+  id: '/invitations',
+  path: '/invitations',
+  getParentRoute: () => AppManageRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/app': typeof AppRouteWithChildren
+  '/forgot-password': typeof ForgotPasswordRoute
+  '/login': typeof LoginRoute
+  '/privacy': typeof PrivacyRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/signup': typeof SignupRoute
+  '/terms': typeof TermsRoute
+  '/verify-email': typeof VerifyEmailRoute
+  '/accept-invitation/$invitationId': typeof AcceptInvitationInvitationIdRoute
+  '/app/account': typeof AppAccountRoute
+  '/app/admin': typeof AppAdminRouteWithChildren
+  '/app/manage': typeof AppManageRouteWithChildren
+  '/app/settings': typeof AppSettingsRoute
+  '/app/': typeof AppIndexRoute
+  '/app/admin/audit': typeof AppAdminAuditRoute
+  '/app/admin/organizations': typeof AppAdminOrganizationsRoute
+  '/app/admin/users': typeof AppAdminUsersRoute
+  '/app/manage/invitations': typeof AppManageInvitationsRoute
+  '/app/manage/': typeof AppManageIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/forgot-password': typeof ForgotPasswordRoute
+  '/login': typeof LoginRoute
+  '/privacy': typeof PrivacyRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/signup': typeof SignupRoute
+  '/terms': typeof TermsRoute
+  '/verify-email': typeof VerifyEmailRoute
+  '/accept-invitation/$invitationId': typeof AcceptInvitationInvitationIdRoute
+  '/app/account': typeof AppAccountRoute
+  '/app/admin': typeof AppAdminRouteWithChildren
+  '/app/settings': typeof AppSettingsRoute
+  '/app': typeof AppIndexRoute
+  '/app/admin/audit': typeof AppAdminAuditRoute
+  '/app/admin/organizations': typeof AppAdminOrganizationsRoute
+  '/app/admin/users': typeof AppAdminUsersRoute
+  '/app/manage/invitations': typeof AppManageInvitationsRoute
+  '/app/manage': typeof AppManageIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/app': typeof AppRouteWithChildren
+  '/forgot-password': typeof ForgotPasswordRoute
+  '/login': typeof LoginRoute
+  '/privacy': typeof PrivacyRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/signup': typeof SignupRoute
+  '/terms': typeof TermsRoute
+  '/verify-email': typeof VerifyEmailRoute
+  '/accept-invitation/$invitationId': typeof AcceptInvitationInvitationIdRoute
+  '/app/account': typeof AppAccountRoute
+  '/app/admin': typeof AppAdminRouteWithChildren
+  '/app/manage': typeof AppManageRouteWithChildren
+  '/app/settings': typeof AppSettingsRoute
+  '/app/': typeof AppIndexRoute
+  '/app/admin/audit': typeof AppAdminAuditRoute
+  '/app/admin/organizations': typeof AppAdminOrganizationsRoute
+  '/app/admin/users': typeof AppAdminUsersRoute
+  '/app/manage/invitations': typeof AppManageInvitationsRoute
+  '/app/manage/': typeof AppManageIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/app'
+    | '/forgot-password'
+    | '/login'
+    | '/privacy'
+    | '/reset-password'
+    | '/signup'
+    | '/terms'
+    | '/verify-email'
+    | '/accept-invitation/$invitationId'
+    | '/app/account'
+    | '/app/admin'
+    | '/app/manage'
+    | '/app/settings'
+    | '/app/'
+    | '/app/admin/audit'
+    | '/app/admin/organizations'
+    | '/app/admin/users'
+    | '/app/manage/invitations'
+    | '/app/manage/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/forgot-password'
+    | '/login'
+    | '/privacy'
+    | '/reset-password'
+    | '/signup'
+    | '/terms'
+    | '/verify-email'
+    | '/accept-invitation/$invitationId'
+    | '/app/account'
+    | '/app/admin'
+    | '/app/settings'
+    | '/app'
+    | '/app/admin/audit'
+    | '/app/admin/organizations'
+    | '/app/admin/users'
+    | '/app/manage/invitations'
+    | '/app/manage'
+  id:
+    | '__root__'
+    | '/'
+    | '/app'
+    | '/forgot-password'
+    | '/login'
+    | '/privacy'
+    | '/reset-password'
+    | '/signup'
+    | '/terms'
+    | '/verify-email'
+    | '/accept-invitation/$invitationId'
+    | '/app/account'
+    | '/app/admin'
+    | '/app/manage'
+    | '/app/settings'
+    | '/app/'
+    | '/app/admin/audit'
+    | '/app/admin/organizations'
+    | '/app/admin/users'
+    | '/app/manage/invitations'
+    | '/app/manage/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AppRoute: typeof AppRouteWithChildren
+  ForgotPasswordRoute: typeof ForgotPasswordRoute
+  LoginRoute: typeof LoginRoute
+  PrivacyRoute: typeof PrivacyRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
+  SignupRoute: typeof SignupRoute
+  TermsRoute: typeof TermsRoute
+  VerifyEmailRoute: typeof VerifyEmailRoute
+  AcceptInvitationInvitationIdRoute: typeof AcceptInvitationInvitationIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +286,201 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/app': {
+      id: '/app'
+      path: '/app'
+      fullPath: '/app'
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/forgot-password': {
+      id: '/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof ForgotPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/signup': {
+      id: '/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/verify-email': {
+      id: '/verify-email'
+      path: '/verify-email'
+      fullPath: '/verify-email'
+      preLoaderRoute: typeof VerifyEmailRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/accept-invitation/$invitationId': {
+      id: '/accept-invitation/$invitationId'
+      path: '/accept-invitation/$invitationId'
+      fullPath: '/accept-invitation/$invitationId'
+      preLoaderRoute: typeof AcceptInvitationInvitationIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/app/': {
+      id: '/app/'
+      path: '/'
+      fullPath: '/app/'
+      preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/account': {
+      id: '/app/account'
+      path: '/account'
+      fullPath: '/app/account'
+      preLoaderRoute: typeof AppAccountRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/admin': {
+      id: '/app/admin'
+      path: '/admin'
+      fullPath: '/app/admin'
+      preLoaderRoute: typeof AppAdminRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/manage': {
+      id: '/app/manage'
+      path: '/manage'
+      fullPath: '/app/manage'
+      preLoaderRoute: typeof AppManageRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/settings': {
+      id: '/app/settings'
+      path: '/settings'
+      fullPath: '/app/settings'
+      preLoaderRoute: typeof AppSettingsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/admin/audit': {
+      id: '/app/admin/audit'
+      path: '/audit'
+      fullPath: '/app/admin/audit'
+      preLoaderRoute: typeof AppAdminAuditRouteImport
+      parentRoute: typeof AppAdminRoute
+    }
+    '/app/admin/organizations': {
+      id: '/app/admin/organizations'
+      path: '/organizations'
+      fullPath: '/app/admin/organizations'
+      preLoaderRoute: typeof AppAdminOrganizationsRouteImport
+      parentRoute: typeof AppAdminRoute
+    }
+    '/app/admin/users': {
+      id: '/app/admin/users'
+      path: '/users'
+      fullPath: '/app/admin/users'
+      preLoaderRoute: typeof AppAdminUsersRouteImport
+      parentRoute: typeof AppAdminRoute
+    }
+    '/app/manage/': {
+      id: '/app/manage/'
+      path: '/'
+      fullPath: '/app/manage/'
+      preLoaderRoute: typeof AppManageIndexRouteImport
+      parentRoute: typeof AppManageRoute
+    }
+    '/app/manage/invitations': {
+      id: '/app/manage/invitations'
+      path: '/invitations'
+      fullPath: '/app/manage/invitations'
+      preLoaderRoute: typeof AppManageInvitationsRouteImport
+      parentRoute: typeof AppManageRoute
+    }
   }
 }
 
+interface AppAdminRouteChildren {
+  AppAdminAuditRoute: typeof AppAdminAuditRoute
+  AppAdminOrganizationsRoute: typeof AppAdminOrganizationsRoute
+  AppAdminUsersRoute: typeof AppAdminUsersRoute
+}
+
+const AppAdminRouteChildren: AppAdminRouteChildren = {
+  AppAdminAuditRoute: AppAdminAuditRoute,
+  AppAdminOrganizationsRoute: AppAdminOrganizationsRoute,
+  AppAdminUsersRoute: AppAdminUsersRoute,
+}
+
+const AppAdminRouteWithChildren = AppAdminRoute._addFileChildren(
+  AppAdminRouteChildren,
+)
+
+interface AppManageRouteChildren {
+  AppManageInvitationsRoute: typeof AppManageInvitationsRoute
+  AppManageIndexRoute: typeof AppManageIndexRoute
+}
+
+const AppManageRouteChildren: AppManageRouteChildren = {
+  AppManageInvitationsRoute: AppManageInvitationsRoute,
+  AppManageIndexRoute: AppManageIndexRoute,
+}
+
+const AppManageRouteWithChildren = AppManageRoute._addFileChildren(
+  AppManageRouteChildren,
+)
+
+interface AppRouteChildren {
+  AppAccountRoute: typeof AppAccountRoute
+  AppAdminRoute: typeof AppAdminRouteWithChildren
+  AppManageRoute: typeof AppManageRouteWithChildren
+  AppSettingsRoute: typeof AppSettingsRoute
+  AppIndexRoute: typeof AppIndexRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppAccountRoute: AppAccountRoute,
+  AppAdminRoute: AppAdminRouteWithChildren,
+  AppManageRoute: AppManageRouteWithChildren,
+  AppSettingsRoute: AppSettingsRoute,
+  AppIndexRoute: AppIndexRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AppRoute: AppRouteWithChildren,
+  ForgotPasswordRoute: ForgotPasswordRoute,
+  LoginRoute: LoginRoute,
+  PrivacyRoute: PrivacyRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
+  SignupRoute: SignupRoute,
+  TermsRoute: TermsRoute,
+  VerifyEmailRoute: VerifyEmailRoute,
+  AcceptInvitationInvitationIdRoute: AcceptInvitationInvitationIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

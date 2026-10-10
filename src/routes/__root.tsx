@@ -1,7 +1,15 @@
-import { Link, createRootRoute, Outlet } from "@tanstack/react-router";
+import type { QueryClient } from "@tanstack/react-query";
+import { Link, createRootRouteWithContext, Outlet } from "@tanstack/react-router";
 
-export const Route = createRootRoute({
-  component: () => <Outlet />,
+import { Toaster } from "@/components/ui/sonner";
+
+export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
+  component: () => (
+    <>
+      <Outlet />
+      <Toaster position="top-center" />
+    </>
+  ),
   notFoundComponent: () => (
     <div className="flex min-h-svh flex-col items-center justify-center gap-2">
       <p className="font-heading text-4xl font-semibold">404</p>

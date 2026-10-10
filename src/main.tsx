@@ -3,12 +3,17 @@ import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 
+import { ThemeProvider } from "@/components/theme-provider";
 import { routeTree } from "./routeTree.gen";
 import "./index.css";
 
 const queryClient = new QueryClient();
 
-const router = createRouter({ routeTree });
+const router = createRouter({
+  routeTree,
+  context: { queryClient },
+  defaultPreload: "intent",
+});
 
 declare module "@tanstack/react-router" {
   interface Register {
@@ -19,7 +24,9 @@ declare module "@tanstack/react-router" {
 createRoot(document.getElementById("app")!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
+      <ThemeProvider>
+        <RouterProvider router={router} />
+      </ThemeProvider>
     </QueryClientProvider>
   </StrictMode>,
 );

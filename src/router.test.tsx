@@ -11,6 +11,7 @@ function renderRoute(path: string) {
   });
   const router = createRouter({
     routeTree,
+    context: { queryClient },
     history: createMemoryHistory({ initialEntries: [path] }),
   });
 
@@ -25,18 +26,31 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
+function stubApi() {
+  vi.stubGlobal(
+    "fetch",
+    vi.fn(async (input: RequestInfo | URL) => {
+      const url = typeof input === "string" ? input : input instanceof URL ? input.href : input.url;
+      if (url.includes("/api/health")) {
+        return Response.json({ status: "ok", database: true, db_latency_ms: 2 });
+      }
+      if (url.includes("/api/auth/me")) {
+        return new Response(null, { status: 401 });
+      }
+      return new Response(null, { status: 404 });
+    }),
+  );
+}
+
 describe("routes", () => {
   it("renders the landing page with both services operational", async () => {
-    vi.stubGlobal(
-      "fetch",
-      vi.fn(async () => Response.json({ status: "ok", database: true, db_latency_ms: 2 })),
-    );
+    stubApi();
 
     const { getByText, getAllByText } = renderRoute("/");
 
-    await waitFor(() => expect(getByText("Asas moden untuk produk anda.")).toBeTruthy());
+    await waitFor(() => expect(getByText("Asas moden untuk produk SaaS anda.")).toBeTruthy());
     await waitFor(() => expect(getAllByText("Operasi")).toHaveLength(2));
-    expect(getByText("Semua sistem normal")).toBeTruthy();
+    expect(getByText("Mula secara percuma")).toBeTruthy();
   });
 
   it("renders the not-found page for unknown paths", async () => {
