@@ -1,6 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
 
 import { PageBody, PageHeader } from "@/components/page-header";
 import { Badge } from "@/components/ui/badge";
@@ -18,12 +17,26 @@ interface AuditEntry {
   detail: string | null;
 }
 
+type AuditSearch = { q?: string };
+
 export const Route = createFileRoute("/app/admin/audit")({
+  validateSearch: (search: Record<string, unknown>): AuditSearch => ({
+    q: typeof search.q === "string" ? search.q : undefined,
+  }),
   component: AdminAuditPage,
 });
 
 function AdminAuditPage() {
-  const [filter, setFilter] = useState("");
+  const { q } = Route.useSearch();
+  const navigate = Route.useNavigate();
+  const filter = q ?? "";
+
+  const setFilter = (value: string) => {
+    void navigate({
+      search: (prev: AuditSearch) => ({ ...prev, q: value || undefined }),
+      replace: true,
+    });
+  };
 
   const audit = useQuery({
     queryKey: ["admin", "audit"],

@@ -22,6 +22,7 @@ import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { http } from "@/lib/api";
 import { requireOrgManager } from "@/lib/guards";
+import { UnsavedChangesDialog } from "@/components/unsaved-changes-dialog";
 import { formString } from "@/lib/form";
 
 interface OrgDetail {
@@ -45,6 +46,7 @@ function SettingsPage() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [deleteConfirm, setDeleteConfirm] = useState("");
+  const [dirty, setDirty] = useState(false);
 
   const org = useQuery({
     queryKey: ["org"],
@@ -55,6 +57,7 @@ function SettingsPage() {
     mutationFn: (body: { name?: string; slug?: string; logo?: string }) =>
       http.patch("/api/organizations/current", body),
     onSuccess: async () => {
+      setDirty(false);
       toast.success("Workspace dikemas kini.");
       await queryClient.invalidateQueries({ queryKey: ["org"] });
       await queryClient.invalidateQueries({ queryKey: ["me"] });
@@ -65,6 +68,7 @@ function SettingsPage() {
   const remove = useMutation({
     mutationFn: () => http.del("/api/organizations/current"),
     onSuccess: async () => {
+      setDirty(false);
       toast.success("Workspace dipadam.");
       await queryClient.invalidateQueries({ queryKey: ["me"] });
       await navigate({ to: "/app" });
@@ -100,7 +104,7 @@ function SettingsPage() {
             <CardDescription>Nama, slug, dan logo workspace aktif ini.</CardDescription>
           </CardHeader>
           <CardContent>
-            <form onSubmit={onUpdate} className="max-w-md">
+            <form onSubmit={onUpdate} onChange={() => setDirty(true)} className="max-w-md">
               <FieldGroup>
                 <Field>
                   <FieldLabel htmlFor="name">Nama</FieldLabel>
@@ -196,6 +200,8 @@ function SettingsPage() {
           ) : null}
         </Card>
       </PageBody>
+
+      <UnsavedChangesDialog dirty={dirty} />
     </>
   );
 }

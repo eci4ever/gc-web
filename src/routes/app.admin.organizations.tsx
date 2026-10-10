@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { toast } from "sonner";
 
 import { PageBody, PageHeader } from "@/components/page-header";
@@ -38,20 +38,43 @@ interface AdminOrgInfo {
   created_at: string;
 }
 
+type OrgsSearch = { q?: string };
+
 export const Route = createFileRoute("/app/admin/organizations")({
+  validateSearch: (search: Record<string, unknown>): OrgsSearch => ({
+    q: typeof search.q === "string" ? search.q : undefined,
+  }),
   component: AdminOrganizationsPage,
 });
 
 function AdminOrganizationsPage() {
-  const [search, setSearch] = useState("");
+  const { q } = Route.useSearch();
+  const navigate = Route.useNavigate();
+  const [search, setSearch] = useState(q ?? "");
   const [renameTarget, setRenameTarget] = useState<AdminOrgInfo | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<AdminOrgInfo | null>(null);
   const queryClient = useQueryClient();
 
+  // Debounce kekataan ke URL (?q=) supaya carian boleh di-deep-link.
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      void navigate({
+        search: (prev) => ({ ...prev, q: search || undefined }),
+        replace: true,
+      });
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [search, navigate]);
+
+  // Segerak balik/ke hadapan pelayar.
+  useEffect(() => {
+    setSearch(q ?? "");
+  }, [q]);
+
   const orgs = useQuery({
-    queryKey: ["admin", "organizations", search],
+    queryKey: ["admin", "organizations", q ?? ""],
     queryFn: () =>
-      http.get<AdminOrgInfo[]>(`/api/admin/organizations?q=${encodeURIComponent(search)}`),
+      http.get<AdminOrgInfo[]>(`/api/admin/organizations?q=${encodeURIComponent(q ?? "")}`),
   });
 
   const invalidate = () => queryClient.invalidateQueries({ queryKey: ["admin", "organizations"] });

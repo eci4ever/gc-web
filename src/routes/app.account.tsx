@@ -23,6 +23,7 @@ import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { http } from "@/lib/api";
 import { requireSession } from "@/lib/guards";
+import { UnsavedChangesDialog } from "@/components/unsaved-changes-dialog";
 import { formString } from "@/lib/form";
 
 interface SessionInfo {
@@ -47,12 +48,14 @@ function AccountPage() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [deleteConfirm, setDeleteConfirm] = useState("");
+  const [dirty, setDirty] = useState(false);
 
   const invalidateMe = () => queryClient.invalidateQueries({ queryKey: ["me"] });
 
   const updateProfile = useMutation({
     mutationFn: (body: { name: string; avatar_url: string }) => http.patch("/api/me", body),
     onSuccess: async () => {
+      setDirty(false);
       toast.success("Profil disimpan.");
       await invalidateMe();
     },
@@ -63,6 +66,7 @@ function AccountPage() {
     mutationFn: (body: { current_password: string; new_password: string }) =>
       http.post("/api/me/password", body),
     onSuccess: async () => {
+      setDirty(false);
       toast.success("Kata laluan ditukar. Sesi lain telah dilog keluar.");
       await invalidateMe();
     },
@@ -72,6 +76,7 @@ function AccountPage() {
   const changeEmail = useMutation({
     mutationFn: (body: { password: string; new_email: string }) => http.post("/api/me/email", body),
     onSuccess: async () => {
+      setDirty(false);
       toast.success("Pengesahan dihantar ke email baharu.");
       await invalidateMe();
     },
@@ -110,6 +115,7 @@ function AccountPage() {
   const deleteAccount = useMutation({
     mutationFn: () => http.del("/api/me"),
     onSuccess: () => {
+      setDirty(false);
       queryClient.setQueryData(["me"], null);
       void navigate({ to: "/" });
     },
@@ -156,7 +162,7 @@ function AccountPage() {
               <CardDescription>Nama dan avatar anda.</CardDescription>
             </CardHeader>
             <CardContent>
-              <form onSubmit={onUpdateProfile} className="max-w-sm">
+              <form onSubmit={onUpdateProfile} onChange={() => setDirty(true)} className="max-w-sm">
                 <FieldGroup>
                   <Field>
                     <FieldLabel htmlFor="name">Nama</FieldLabel>
@@ -214,7 +220,7 @@ function AccountPage() {
                   </AlertDescription>
                 </Alert>
               ) : null}
-              <form onSubmit={onChangeEmail} className="max-w-sm">
+              <form onSubmit={onChangeEmail} onChange={() => setDirty(true)} className="max-w-sm">
                 <FieldGroup>
                   <Field>
                     <FieldLabel htmlFor="new_email">Email baharu</FieldLabel>
@@ -257,7 +263,11 @@ function AccountPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <form onSubmit={onChangePassword} className="max-w-sm">
+              <form
+                onSubmit={onChangePassword}
+                onChange={() => setDirty(true)}
+                className="max-w-sm"
+              >
                 <FieldGroup>
                   <Field>
                     <FieldLabel htmlFor="current">Kata laluan semasa</FieldLabel>
@@ -384,6 +394,8 @@ function AccountPage() {
           </CardContent>
         </Card>
       </PageBody>
+
+      <UnsavedChangesDialog dirty={dirty} />
     </>
   );
 }

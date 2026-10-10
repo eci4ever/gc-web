@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BanIcon, MoreHorizontalIcon, ShieldCheckIcon, UserRoundPlusIcon } from "lucide-react";
 import { toast } from "sonner";
 
@@ -47,21 +47,44 @@ interface AdminUserInfo {
   created_at: string;
 }
 
+type UsersSearch = { q?: string };
+
 export const Route = createFileRoute("/app/admin/users")({
+  validateSearch: (search: Record<string, unknown>): UsersSearch => ({
+    q: typeof search.q === "string" ? search.q : undefined,
+  }),
   component: AdminUsersPage,
 });
 
 function AdminUsersPage() {
-  const [search, setSearch] = useState("");
+  const { q } = Route.useSearch();
+  const [search, setSearch] = useState(q ?? "");
   const [banTarget, setBanTarget] = useState<AdminUserInfo | null>(null);
   const [banReason, setBanReason] = useState("");
   const [passwordTarget, setPasswordTarget] = useState<AdminUserInfo | null>(null);
   const queryClient = useQueryClient();
+  const routerNavigate = Route.useNavigate();
   const navigate = useNavigate();
 
+  // Debounce kekataan ke URL (?q=) supaya carian boleh di-deep-link.
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      void routerNavigate({
+        search: (prev) => ({ ...prev, q: search || undefined }),
+        replace: true,
+      });
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [search, routerNavigate]);
+
+  // Segerak balik/ke hadapan pelayar.
+  useEffect(() => {
+    setSearch(q ?? "");
+  }, [q]);
+
   const users = useQuery({
-    queryKey: ["admin", "users", search],
-    queryFn: () => http.get<AdminUserInfo[]>(`/api/admin/users?q=${encodeURIComponent(search)}`),
+    queryKey: ["admin", "users", q ?? ""],
+    queryFn: () => http.get<AdminUserInfo[]>(`/api/admin/users?q=${encodeURIComponent(q ?? "")}`),
   });
 
   const invalidate = () => queryClient.invalidateQueries({ queryKey: ["admin", "users"] });
