@@ -2,15 +2,19 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { DatabaseIcon, ServerIcon } from "lucide-react";
 
 import { BrandMark } from "@/components/brand-mark";
+import { SkipLink } from "@/components/skip-link";
 import { StatusCard } from "@/components/status-card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useHealth, useMe } from "@/lib/api";
+import { usePageTitle } from "@/lib/use-page-title";
 
 function LandingPage() {
   const health = useHealth();
   const me = useMe();
   const signedIn = !!me.data;
+
+  usePageTitle("Asas moden untuk produk SaaS anda");
 
   const apiState = health.isPending
     ? ("loading" as const)
@@ -26,6 +30,7 @@ function LandingPage() {
 
   return (
     <div className="flex min-h-svh flex-col bg-background text-foreground">
+      <SkipLink />
       <header className="border-b">
         <div className="mx-auto flex h-14 w-full max-w-5xl items-center justify-between px-6">
           <BrandMark />
@@ -44,7 +49,7 @@ function LandingPage() {
         </div>
       </header>
 
-      <main className="flex-1">
+      <main id="main-content" className="flex-1">
         <section className="mx-auto w-full max-w-5xl px-6 py-24 sm:py-32">
           <div className="mx-auto flex max-w-2xl flex-col items-center text-center">
             <Badge variant="outline">vms.nimfi.dev</Badge>

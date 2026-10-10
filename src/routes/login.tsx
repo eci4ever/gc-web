@@ -86,14 +86,14 @@ function LoginPage() {
       }
     >
       {reset ? (
-        <Alert className="mb-4">
+        <Alert role="status" className="mb-4">
           <AlertDescription>
             Kata laluan telah ditukar. Sila log masuk dengan kata laluan baharu.
           </AlertDescription>
         </Alert>
       ) : null}
       {error ? (
-        <Alert variant="destructive" className="mb-4">
+        <Alert role="alert" variant="destructive" className="mb-4">
           <AlertDescription>{error}</AlertDescription>
         </Alert>
       ) : null}
@@ -115,7 +115,7 @@ function LoginPage() {
           </Field>
         </FieldGroup>
         {formError ? (
-          <Alert variant="destructive">
+          <Alert role="alert" variant="destructive">
             <AlertDescription>{formError}</AlertDescription>
           </Alert>
         ) : null}

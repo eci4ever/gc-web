@@ -24,6 +24,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { MoreHorizontalIcon } from "lucide-react";
 
 import { http } from "@/lib/api";
@@ -94,12 +95,20 @@ function AdminOrganizationsPage() {
             <CardDescription>Carian mengikut nama, slug, atau email owner.</CardDescription>
           </CardHeader>
           <CardContent className="grid gap-3">
-            <Input
-              placeholder="Cari nama / slug / owner…"
-              value={search}
-              onChange={(event) => setSearch(event.target.value)}
-              className="max-w-sm"
-            />
+            <div className="grid gap-1.5">
+              <Label htmlFor="cari-organisasi" className="sr-only">
+                Cari organisasi
+              </Label>
+              <Input
+                id="cari-organisasi"
+                name="q"
+                type="search"
+                placeholder="Cari nama / slug / owner…"
+                value={search}
+                onChange={(event) => setSearch(event.target.value)}
+                className="max-w-sm"
+              />
+            </div>
             {orgs.data?.map((org) => (
               <div
                 key={org.id}
@@ -141,8 +150,10 @@ function AdminOrganizationsPage() {
           <AlertDialogHeader>
             <AlertDialogTitle>Namakan semula "{renameTarget?.name}"</AlertDialogTitle>
           </AlertDialogHeader>
-          <form id="admin-rename-org" onSubmit={onRename} className="grid gap-2">
+          <form id="admin-rename-org" onSubmit={onRename} className="grid gap-1.5">
+            <Label htmlFor="nama-organisasi">Nama workspace</Label>
             <Input
+              id="nama-organisasi"
               name="name"
               required
               maxLength={100}

@@ -64,7 +64,7 @@ function AcceptInvitationPage() {
   if (invitation.isError) {
     return (
       <Shell title="Jemputan tidak dijumpai">
-        <Alert variant="destructive">
+        <Alert role="alert" variant="destructive">
           <AlertDescription>Jemputan ini tidak sah atau telah dibatalkan.</AlertDescription>
         </Alert>
         <div className="mt-4 text-center text-sm">
@@ -87,7 +87,7 @@ function AcceptInvitationPage() {
           di <span className="font-medium text-foreground">{invite.organization_name}</span>.
         </p>
         {!emailMatch ? (
-          <Alert variant="destructive">
+          <Alert role="alert" variant="destructive">
             <AlertDescription>
               Jemputan ini ditujukan kepada <strong>{invite.email}</strong>, tetapi anda log masuk
               sebagai <strong>{me?.user.email}</strong>. Log masuk dengan email yang betul untuk
@@ -96,7 +96,7 @@ function AcceptInvitationPage() {
           </Alert>
         ) : null}
         {accept.isError ? (
-          <Alert variant="destructive">
+          <Alert role="alert" variant="destructive">
             <AlertDescription>
               {accept.error instanceof Error
                 ? accept.error.message

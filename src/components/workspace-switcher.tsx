@@ -25,6 +25,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { SidebarMenuButton } from "@/components/ui/sidebar";
 import { http, useMe } from "@/lib/api";
 import { roleLabel } from "@/lib/access";
@@ -118,8 +119,17 @@ export function WorkspaceSwitcher() {
               Anda menjadi owner workspace yang dicipta.
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <form id="create-workspace" onSubmit={onCreate} className="grid gap-2">
-            <Input name="name" placeholder="Nama workspace" required maxLength={100} />
+          <form id="create-workspace" onSubmit={onCreate} className="grid gap-1.5">
+            <Label htmlFor="nama-workspace" className="sr-only">
+              Nama workspace
+            </Label>
+            <Input
+              id="nama-workspace"
+              name="name"
+              placeholder="Nama workspace"
+              required
+              maxLength={100}
+            />
           </form>
           <AlertDialogFooter>
             <AlertDialogCancel>Batal</AlertDialogCancel>

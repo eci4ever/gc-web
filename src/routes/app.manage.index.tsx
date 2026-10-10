@@ -24,6 +24,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/spinner";
 import { http } from "@/lib/api";
 import type { OrgRole } from "@/lib/access";
@@ -123,15 +124,22 @@ function MembersPage() {
         </CardHeader>
         <CardContent>
           <form onSubmit={onInvite} className="flex flex-col gap-2 sm:flex-row sm:items-center">
-            <Input
-              name="email"
-              type="email"
-              placeholder="email@contoh.com"
-              required
-              className="sm:max-w-xs"
-            />
+            <div className="grid gap-1.5">
+              <Label htmlFor="invite-email" className="sr-only">
+                Email ahli baharu
+              </Label>
+              <Input
+                id="invite-email"
+                name="email"
+                type="email"
+                placeholder="email@contoh.com"
+                autoComplete="email"
+                required
+                className="sm:max-w-xs"
+              />
+            </div>
             <Select name="role" defaultValue="member">
-              <SelectTrigger className="sm:w-36">
+              <SelectTrigger className="sm:w-36" aria-label="Peranan jemputan">
                 <SelectValue placeholder="Peranan" />
               </SelectTrigger>
               <SelectContent>

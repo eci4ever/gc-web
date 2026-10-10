@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 
 import { BrandMark } from "@/components/brand-mark";
+import { SkipLink } from "@/components/skip-link";
 import {
   Card,
   CardContent,
@@ -9,6 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { usePageTitle } from "@/lib/use-page-title";
 
 interface AuthShellProps {
   title: string;
@@ -18,9 +20,12 @@ interface AuthShellProps {
 }
 
 export function AuthShell({ title, description, children, footer }: AuthShellProps) {
+  usePageTitle(title);
+
   return (
     <div className="flex min-h-svh flex-col items-center justify-center px-4 py-10">
-      <div className="w-full max-w-sm">
+      <SkipLink />
+      <main id="main-content" className="w-full max-w-sm">
         <BrandMark center className="mb-8" />
         <Card>
           <CardHeader>
@@ -34,7 +39,7 @@ export function AuthShell({ title, description, children, footer }: AuthShellPro
             </CardFooter>
           ) : null}
         </Card>
-      </div>
+      </main>
     </div>
   );
 }

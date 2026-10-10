@@ -26,6 +26,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -146,12 +147,20 @@ function AdminUsersPage() {
             </CardDescription>
           </CardHeader>
           <CardContent className="grid gap-3">
-            <Input
-              placeholder="Cari email atau nama…"
-              value={search}
-              onChange={(event) => setSearch(event.target.value)}
-              className="max-w-sm"
-            />
+            <div className="grid gap-1.5">
+              <Label htmlFor="cari-pengguna" className="sr-only">
+                Cari pengguna
+              </Label>
+              <Input
+                id="cari-pengguna"
+                name="q"
+                type="search"
+                placeholder="Cari email atau nama…"
+                value={search}
+                onChange={(event) => setSearch(event.target.value)}
+                className="max-w-sm"
+              />
+            </div>
             {users.data?.map((user) => (
               <div
                 key={user.id}
@@ -246,11 +255,15 @@ function AdminUsersPage() {
               Semua sesi aktif akan dilog keluar dan log masuk disekat.
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <Input
-            placeholder="Sebab ban (wajib)"
-            value={banReason}
-            onChange={(event) => setBanReason(event.target.value)}
-          />
+          <div className="grid gap-1.5">
+            <Label htmlFor="sebab-ban">Sebab ban (wajib)</Label>
+            <Input
+              id="sebab-ban"
+              name="reason"
+              value={banReason}
+              onChange={(event) => setBanReason(event.target.value)}
+            />
+          </div>
           <AlertDialogFooter>
             <AlertDialogCancel>Batal</AlertDialogCancel>
             <AlertDialogAction
@@ -285,14 +298,17 @@ function AdminUsersPage() {
               }
             }}
           >
-            <Input
-              name="password"
-              type="password"
-              required
-              minLength={8}
-              placeholder="Kata laluan baharu (min 8)"
-              autoComplete="new-password"
-            />
+            <div className="grid gap-1.5">
+              <Label htmlFor="kata-laluan-admin">Kata laluan baharu (min 8 aksara)</Label>
+              <Input
+                id="kata-laluan-admin"
+                name="password"
+                type="password"
+                required
+                minLength={8}
+                autoComplete="new-password"
+              />
+            </div>
           </form>
           <AlertDialogFooter>
             <AlertDialogCancel>Batal</AlertDialogCancel>

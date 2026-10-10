@@ -6,6 +6,7 @@ import { PageBody, PageHeader } from "@/components/page-header";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { http } from "@/lib/api";
 
 interface AuditEntry {
@@ -50,12 +51,20 @@ function AdminAuditPage() {
             </CardDescription>
           </CardHeader>
           <CardContent className="grid gap-3">
-            <Input
-              placeholder="Tapis…"
-              value={filter}
-              onChange={(event) => setFilter(event.target.value)}
-              className="max-w-sm"
-            />
+            <div className="grid gap-1.5">
+              <Label htmlFor="tapis-audit" className="sr-only">
+                Tapis entri audit
+              </Label>
+              <Input
+                id="tapis-audit"
+                name="q"
+                type="search"
+                placeholder="Tapis…"
+                value={filter}
+                onChange={(event) => setFilter(event.target.value)}
+                className="max-w-sm"
+              />
+            </div>
             {entries.map((entry) => (
               <div
                 key={entry.id}

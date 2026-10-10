@@ -96,7 +96,7 @@ function ResetPasswordPage() {
           </Field>
         </FieldGroup>
         {formError ? (
-          <Alert variant="destructive">
+          <Alert role="alert" variant="destructive">
             <AlertDescription>{formError}</AlertDescription>
           </Alert>
         ) : null}

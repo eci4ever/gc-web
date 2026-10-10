@@ -41,7 +41,7 @@ function VerifyEmailPage() {
         </div>
       ) : verify.isError ? (
         <>
-          <Alert variant="destructive">
+          <Alert role="alert" variant="destructive">
             <AlertDescription>
               Pautan pengesahan tidak sah atau telah tamat tempoh.
             </AlertDescription>
@@ -67,7 +67,7 @@ function VerifyEmailPage() {
           </div>
         </>
       ) : (
-        <Alert variant="destructive">
+        <Alert role="alert" variant="destructive">
           <AlertDescription>Tiada token pengesahan diberikan.</AlertDescription>
         </Alert>
       )}
