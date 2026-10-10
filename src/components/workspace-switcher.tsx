@@ -81,7 +81,7 @@ export function WorkspaceSwitcher() {
       <DropdownMenu>
         <DropdownMenuTrigger render={<SidebarMenuButton size="lg" className="w-full" />}>
           <div className="flex size-6 shrink-0 items-center justify-center rounded-md bg-primary text-[0.6rem] font-bold text-primary-foreground">
-            {(me?.org?.name ?? "gc").charAt(0).toUpperCase()}
+            {(me?.org?.name ?? "GC-RUST").charAt(0).toUpperCase()}
           </div>
           <span className="truncate font-medium">{me?.org?.name ?? "Tiada workspace"}</span>
           <Badge variant="secondary" className="ml-auto shrink-0">
